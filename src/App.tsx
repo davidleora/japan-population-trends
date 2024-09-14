@@ -1,35 +1,114 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useEffect, useState } from 'react';
+import './App.css';
 
-function App() {
-  const [count, setCount] = useState(0)
+type Prefecture = {
+  prefCode: number;
+  prefName: string;
+};
+
+type PopulationData = {
+  year: number;
+  value: number;
+};
+
+const App: React.FC = () => {
+  const [prefectures, setPrefectures] = useState<Prefecture[]>([]);
+  const [selectedPrefectures, setSelectedPrefectures] = useState<number[]>([]);
+  const [populationData, setPopulationData] = useState<Record<number, PopulationData[]>>({});
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchPrefectures = async () => {
+      try {
+        const response = await fetch('https://opendata.resas-portal.go.jp/api/v1/prefectures', {
+          headers: {
+            'X-API-KEY': import.meta.env.VITE_RESAS_API_KEY,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch prefectures');
+        }
+        
+        const data = await response.json();
+        setPrefectures(data.result);
+      } catch (err) {
+        if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError('An unknown error occurred');
+        }
+      }
+    }
+
+    fetchPrefectures();
+  }, []);
+
+  const handleCheckboxChange = (prefCode: number) => {
+    setSelectedPrefectures((prevSelected) => {
+      if (prevSelected.includes(prefCode)){
+        return prevSelected.filter((code) => code !== prefCode);
+      } else {
+        fetchPopulationData(prefCode);
+        return [...prevSelected, prefCode];
+      }
+    });
+  };
+
+  const fetchPopulationData = async (prefCode: number) => {
+    try {
+      const response = await fetch(
+        `https://opendata.resas-portal.go.jp/api/v1/population/composition/perYear?prefCode=${prefCode}`, 
+        {
+          headers: {
+            'X-API-KEY': import.meta.env.VITE_RESAS_API_KEY,
+          },
+        }
+      );
+      if(!response.ok) {
+        throw new Error('Failed to fetch population data');
+      }
+
+      const data = await response.json();
+      setPopulationData((prevData) => ({
+        ...prevData,
+        [prefCode]: data.result.data[0].data,
+      }));
+    } catch (err) {
+      console.error('Error fetching population data:', err);
+    }
+  };
+
+  if (error) {
+    return <div>Error: {error}</div>
+  }
 
   return (
-    <>
+    <div>
+      <h1>都道府県一覧</h1>
+      <ul>
+        {prefectures.map((prefecture) => (
+          <li key={prefecture.prefCode}>
+            <input type="checkbox" id={`pref-${prefecture.prefCode}`} checked={selectedPrefectures.includes(prefecture.prefCode) || false} onChange={() => handleCheckboxChange(prefecture.prefCode)}/>
+            <label htmlFor={`pref-${prefecture.prefCode}`}>{prefecture.prefName}</label>
+          </li>
+        ))}
+      </ul>
       <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        <h2>人口データ：</h2>
+        {selectedPrefectures.map((prefCode) => (
+          <div key={prefCode}>
+            <h3>{prefectures.find((pref) => pref.prefCode === prefCode)?.prefName}</h3>
+            <ul>
+              {populationData[prefCode]?.map((pop) => (
+                <li key={pop.year}>{pop.year}: {pop.value}</li>
+              ))}
+            </ul>
+          </div>
+        ))}
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    </div>
+  );
+};
 
-export default App
+export default App;
