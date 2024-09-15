@@ -89,6 +89,10 @@ const App: React.FC = () => {
             selectedPrefectures={selectedPrefectures}
             prefectures={prefectures}
             populationData={populationData}
+<<<<<<< HEAD
+=======
+            isLoading={isLoading}
+>>>>>>> e12dceacd9a83d54399b53d15fd8a802ef8e20e8
           />
         </>
       )}
