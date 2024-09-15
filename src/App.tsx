@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
+import LoadingDots from './components/LoadingDots';
 import PrefectureCheckboxList from './components/PrefectureCheckboxList';
 import PopulationDataDisplay from './components/PopulationDataDisplay';
 import useFetchPrefectures from './hooks/useFetchPrefectures';
@@ -11,6 +12,13 @@ const App: React.FC = () => {
   const { populationData, fetchPopulationData } = usePopulationData();
   const [populationCategory, setPopulationCategory] =
     useState<string>('総人口');
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    if (prefectures.length > 0) {
+      setIsLoading(false);
+    }
+  }, [prefectures]);
 
   const handleCheckboxChange = (prefCode: number) => {
     setSelectedPrefectures((prevSelected) => {
@@ -38,45 +46,53 @@ const App: React.FC = () => {
   return (
     <div>
       <h1>都道府県一覧</h1>
-      <PrefectureCheckboxList
-        prefectures={prefectures}
-        selectedPrefectures={selectedPrefectures}
-        onCheckboxChange={handleCheckboxChange}
-      />
 
-      {/* カテゴリを選択するUIをボタンで表示 */}
-      <div className="category-buttons">
-        <button
-          className={populationCategory === '総人口' ? 'active' : ''}
-          onClick={() => handleCategoryChange('総人口')}
-        >
-          総人口
-        </button>
-        <button
-          className={populationCategory === '年少人口' ? 'active' : ''}
-          onClick={() => handleCategoryChange('年少人口')}
-        >
-          年少人口
-        </button>
-        <button
-          className={populationCategory === '生産年齢人口' ? 'active' : ''}
-          onClick={() => handleCategoryChange('生産年齢人口')}
-        >
-          生産年齢人口
-        </button>
-        <button
-          className={populationCategory === '老年人口' ? 'active' : ''}
-          onClick={() => handleCategoryChange('老年人口')}
-        >
-          老年人口
-        </button>
-      </div>
+      {isLoading ? (
+        <LoadingDots />
+      ) : (
+        <>
+          <PrefectureCheckboxList
+            prefectures={prefectures}
+            selectedPrefectures={selectedPrefectures}
+            onCheckboxChange={handleCheckboxChange}
+          />
 
-      <PopulationDataDisplay
-        selectedPrefectures={selectedPrefectures}
-        prefectures={prefectures}
-        populationData={populationData}
-      />
+          {/* カテゴリを選択するUIをボタンで表示 */}
+          <div className="category-buttons">
+            <button
+              className={populationCategory === '総人口' ? 'active' : ''}
+              onClick={() => handleCategoryChange('総人口')}
+            >
+              総人口
+            </button>
+            <button
+              className={populationCategory === '年少人口' ? 'active' : ''}
+              onClick={() => handleCategoryChange('年少人口')}
+            >
+              年少人口
+            </button>
+            <button
+              className={populationCategory === '生産年齢人口' ? 'active' : ''}
+              onClick={() => handleCategoryChange('生産年齢人口')}
+            >
+              生産年齢人口
+            </button>
+            <button
+              className={populationCategory === '老年人口' ? 'active' : ''}
+              onClick={() => handleCategoryChange('老年人口')}
+            >
+              老年人口
+            </button>
+          </div>
+
+          <PopulationDataDisplay
+            selectedPrefectures={selectedPrefectures}
+            prefectures={prefectures}
+            populationData={populationData}
+            isLoading={isLoading}
+          />
+        </>
+      )}
     </div>
   );
 };
