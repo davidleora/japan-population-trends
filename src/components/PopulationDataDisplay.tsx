@@ -21,7 +21,9 @@ const PopulationDataDisplay: React.FC<PopulationDataDisplayProps> = ({
       <h2>人口データ：</h2>
       {selectedPrefectures.map((prefCode) => (
         <div key={prefCode}>
-          <h3>{prefectures.find((pref) => pref.prefCode === prefCode)?.prefName}</h3>
+          <h3>
+            {prefectures.find((pref) => pref.prefCode === prefCode)?.prefName}
+          </h3>
           <ul>
             {populationData[prefCode]?.map((pop) => (
               <li key={pop.year}>

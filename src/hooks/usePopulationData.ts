@@ -6,7 +6,9 @@ type PopulationData = {
 };
 
 const usePopulationData = () => {
-  const [populationData, setPopulationData] = useState<Record<number, PopulationData[]>>({});
+  const [populationData, setPopulationData] = useState<
+    Record<number, PopulationData[]>
+  >({});
 
   const fetchPopulationData = async (prefCode: number, category: string) => {
     try {
