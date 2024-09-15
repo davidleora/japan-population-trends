@@ -37,6 +37,33 @@ label {
     white-space: nowrap;
 }
 
+.category-buttons {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.category-buttons button {
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    background-color: white;
+    cursor: pointer;
+    transition: background-color 0.3s, font-weight 0.3s;
+    flex: 1 1 100px;
+}
+
+.category-buttons button:hover {
+    background-color: #f0f0f0;
+}
+
+.category-buttons button.active {
+    font-weight: bold;
+    background-color: #e0e0e0;
+}
+
 @media (min-width: 768px) {
     html {
         font-size: 16px;
@@ -53,6 +80,15 @@ label {
 
     label {
         font-size: 1.125rem;
+    }
+
+    .category-buttons {
+        gap: 1rem;
+    }
+
+    .category-buttons button {
+        font-size: 1.125rem;
+        flex: 1 1 150px;
     }
 }
 
@@ -72,5 +108,10 @@ label {
 
     label {
         font-size: 1.25rem;
+    }
+
+    .category-buttons button {
+        font-size: 1.25rem;
+        flex: 1 1 200px;
     }
 }
