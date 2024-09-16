@@ -9,6 +9,7 @@ import {
   Legend,
   ResponsiveContainer,
 } from 'recharts';
+import { useMediaQuery } from 'react-responsive';
 
 type PopulationData = {
   year: number;
@@ -46,6 +47,8 @@ const PopulationDataDisplay: React.FC<PopulationDataDisplayProps> = ({
   prefectures,
   populationData,
 }) => {
+  const isMobile = useMediaQuery({ query: '(max-width: 768px)' });
+  const isTablet = useMediaQuery({ query: '(max-width: 1024px)' });
   const mergedData = mergePopulationData(selectedPrefectures, populationData);
   return (
     <div>
@@ -55,8 +58,20 @@ const PopulationDataDisplay: React.FC<PopulationDataDisplayProps> = ({
       <ResponsiveContainer width="100%" height={400}>
         <LineChart data={mergedData}>
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="year" />
-          <YAxis />
+          <XAxis
+            dataKey="year"
+            interval={0}
+            angle={-45}
+            textAnchor="end"
+            tick={{ fontSize: isMobile ? '12px' : isTablet ? '14px' : '16px' }}
+          />
+          <YAxis
+            width={isMobile ? 30 : isTablet ? 50 : 60}
+            tickFormatter={(value) => `${value / 1000}K`}
+            tick={{
+              fontSize: isMobile ? '9px' : isTablet ? '11px' : '13px',
+            }}
+          />
           <Tooltip />
           <Legend />
           {selectedPrefectures.map((prefCode, index) => {
