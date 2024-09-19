@@ -1,44 +1,45 @@
 .loading-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100px;
-    margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100px;
+  margin: 0 auto;
 }
 
 .dot {
-    width: 15px;
-    height: 15px;
-    border-radius: 50%;
-    background-color: #3498db;
-    animation: jump 1s infinite ease-in-out;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background-color: #3498db;
+  animation: jump 1s infinite ease-in-out;
 }
 
 .dot:nth-child(1) {
-    animation-delay: 0s;
+  animation-delay: 0s;
 }
 
 .dot:nth-child(2) {
-    animation-delay: 0.1s;
+  animation-delay: 0.1s;
 }
 
 .dot:nth-child(3) {
-    animation-delay: 0.2s;
+  animation-delay: 0.2s;
 }
 
 .dot:nth-child(4) {
-    animation-delay: 0.3s;
+  animation-delay: 0.3s;
 }
 
 .dot:nth-child(5) {
-    animation-delay: 0.4s;
+  animation-delay: 0.4s;
 }
 
 @keyframes jump {
-    0%, 100% {
-        transform: translateY(0);
-    }
-    50% {
-        transform: translateY(-15px);
-    }
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
 }
