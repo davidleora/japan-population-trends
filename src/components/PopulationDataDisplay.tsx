@@ -55,8 +55,11 @@ const PopulationDataDisplay: React.FC<PopulationDataDisplayProps> = ({
       <h2>人口データ：</h2>
       {selectedPrefectures.length === 0 && <p>都道府県を選択してください。</p>}
 
-      <ResponsiveContainer width="100%" height={400}>
-        <LineChart data={mergedData}>
+      <ResponsiveContainer width="100%" height={250}>
+        <LineChart
+          data={mergedData}
+          margin={{ top: 15, right: 15, left: 10, bottom: 10 }}
+        >
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis
             dataKey="year"

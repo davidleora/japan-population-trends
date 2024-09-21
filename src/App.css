@@ -1,11 +1,29 @@
+:root {
+  --primary-pink: #ffc1e3;
+  --primary-blue: #b3e5fc;
+  --text-color: #333;
+  --header-footer-bg: #f8f9fa;
+  --button-bg-hover: rgba(255, 255, 255, 0.2);
+  --active-button-bg: rgba(255, 255, 255, 0.4); 
+  --divider-color: rgba(31, 31, 31, 0.347);
+  --text-hover-color: #333;
+}
+
 html {
   font-size: 14px;
 }
+
 body {
-  font-family: Arial, sans-serif;
+  font-family: 'M PLUS Rounded 1c', sans-serif;
+  font-weight: 300;
+  color: var(--text-color);
   margin: 0;
   padding: 1rem;
-  background-color: #f9f9f9;
+  background: linear-gradient(135deg, var(--primary-pink), var(--primary-blue));
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  max-width: 100%;
 }
 
 h1 {
@@ -14,12 +32,32 @@ h1 {
   margin-bottom: 1.5rem;
 }
 
+header, footer {
+  background-color: var(--header-footer-bg);
+  padding: 1rem;
+  text-align: center;
+  font-weight: bold;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+header {
+  font-size: 1.5rem;
+}
+
+footer {
+  font-size: 0.875rem;
+  color: #666;
+  margin-top: auto;
+  box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+}
+
 ul {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
   gap: 0.5rem;
   list-style-type: none;
   padding: 0;
+  margin: 0;
 }
 
 li {
@@ -41,29 +79,46 @@ label {
   margin-top: 1rem;
   display: flex;
   justify-content: center;
-  gap: 0.5rem;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 }
 
 .category-buttons button {
-  padding: 0.5rem 1rem;
+  flex: 1;
+  padding: 0.75rem 0.25rem;
   font-size: 1rem;
-  border: 1px solid #ccc;
-  background-color: white;
+  border: none;
+  background-color: transparent;
   cursor: pointer;
-  transition:
-    background-color 0.3s,
-    font-weight 0.3s;
-  flex: 1 1 100px;
+  transition: background-color 0.3s, font-weight 0.3s, color 0.3s;
+  color: #000;
+  border-right: 1px solid var(--divider-color);
+  box-sizing: border-box;
+}
+
+.category-buttons button:last-child {
+  border-right: none;
 }
 
 .category-buttons button:hover {
-  background-color: #f0f0f0;
+  background-color: var(--button-bg-hover);
+  color: var(--text-hover-color);
 }
 
 .category-buttons button.active {
   font-weight: bold;
-  background-color: #e0e0e0;
+  background-color: var(--active-button-bg);
+  color: var(--text-color);
+}
+
+.recharts-wrapper {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #f7f7f7;
+  border-radius: 5px;
+}
+
+.recharts-legend-wrapper{
+  text-align: center;
+  padding-top: 2rem;
 }
 
 @media (min-width: 768px) {
@@ -76,21 +131,8 @@ label {
     margin-bottom: 2rem;
   }
 
-  li {
-    margin-bottom: 1.5rem;
-  }
-
   label {
     font-size: 1.125rem;
-  }
-
-  .category-buttons {
-    gap: 1rem;
-  }
-
-  .category-buttons button {
-    font-size: 1.125rem;
-    flex: 1 1 150px;
   }
 }
 
@@ -114,6 +156,5 @@ label {
 
   .category-buttons button {
     font-size: 1.25rem;
-    flex: 1 1 200px;
   }
 }
