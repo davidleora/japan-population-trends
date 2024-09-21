@@ -49,13 +49,22 @@ const PopulationDataDisplay: React.FC<PopulationDataDisplayProps> = ({
 }) => {
   const isMobile = useMediaQuery({ query: '(max-width: 768px)' });
   const isTablet = useMediaQuery({ query: '(max-width: 1024px)' });
+
+  let chartHeight = 300;
+  if (isTablet && !isMobile) {
+    chartHeight = 400;
+  } else if (!isTablet) {
+    chartHeight = 500;
+  }
+
   const mergedData = mergePopulationData(selectedPrefectures, populationData);
+
   return (
     <div>
       <h2>人口データ：</h2>
       {selectedPrefectures.length === 0 && <p>都道府県を選択してください。</p>}
 
-      <ResponsiveContainer width="100%" height={250}>
+      <ResponsiveContainer width="100%" height={chartHeight}>
         <LineChart
           data={mergedData}
           margin={{ top: 15, right: 15, left: 10, bottom: 10 }}
