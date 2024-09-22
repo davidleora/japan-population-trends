@@ -39,18 +39,35 @@ const App: React.FC = () => {
     });
   };
 
+  const handleSelectAll = () => {
+    const allPrefCodes = prefectures.map((pref) => pref.prefCode);
+    setSelectedPrefectures(allPrefCodes);
+  };
+
+  const handleReset = () => {
+    setSelectedPrefectures([]);
+  };
+
   if (error) {
     return <div>Error: {error}</div>;
   }
 
   return (
     <div>
+      <header>
+        <h1>都道府県別の総人口推移グラフ</h1>
+      </header>
       <h1>都道府県一覧</h1>
 
       {isLoading ? (
         <LoadingDots />
       ) : (
         <>
+          <div className="selection-buttons">
+            <button onClick={handleSelectAll}>全てを選択</button>
+            <button onClick={handleReset}>リセット</button>
+          </div>
+
           <PrefectureCheckboxList
             prefectures={prefectures}
             selectedPrefectures={selectedPrefectures}
@@ -90,6 +107,10 @@ const App: React.FC = () => {
             prefectures={prefectures}
             populationData={populationData}
           />
+
+          <footer>
+            <p>©️ 2024 Japan Population Trends. All rights reserved.</p>
+          </footer>
         </>
       )}
     </div>

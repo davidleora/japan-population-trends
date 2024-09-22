@@ -6,7 +6,6 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend,
   ResponsiveContainer,
 } from 'recharts';
 import { useMediaQuery } from 'react-responsive';
@@ -39,7 +38,7 @@ const mergePopulationData = (
       });
     }
   });
-  return Object.values(mergedData);
+  return Object.values(mergedData).sort((a, b) => a.year - b.year);
 };
 
 const PopulationDataDisplay: React.FC<PopulationDataDisplayProps> = ({
@@ -50,11 +49,11 @@ const PopulationDataDisplay: React.FC<PopulationDataDisplayProps> = ({
   const isMobile = useMediaQuery({ query: '(max-width: 768px)' });
   const isTablet = useMediaQuery({ query: '(max-width: 1024px)' });
 
-  let chartHeight = 300;
+  let chartHeight = 500;
   if (isTablet && !isMobile) {
-    chartHeight = 400;
+    chartHeight = 700;
   } else if (!isTablet) {
-    chartHeight = 500;
+    chartHeight = 900;
   }
 
   const mergedData = mergePopulationData(selectedPrefectures, populationData);
@@ -67,7 +66,7 @@ const PopulationDataDisplay: React.FC<PopulationDataDisplayProps> = ({
       <ResponsiveContainer width="100%" height={chartHeight}>
         <LineChart
           data={mergedData}
-          margin={{ top: 15, right: 15, left: 10, bottom: 10 }}
+          margin={{ top: 15, right: 15, left: 10, bottom: 20 }}
         >
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis
@@ -85,7 +84,6 @@ const PopulationDataDisplay: React.FC<PopulationDataDisplayProps> = ({
             }}
           />
           <Tooltip />
-          <Legend />
           {selectedPrefectures.map((prefCode, index) => {
             const prefecture = prefectures.find(
               (pref) => pref.prefCode === prefCode
@@ -104,6 +102,24 @@ const PopulationDataDisplay: React.FC<PopulationDataDisplayProps> = ({
           })}
         </LineChart>
       </ResponsiveContainer>
+
+      <div className="custom-legend">
+        {selectedPrefectures.map((prefCode, index) => {
+          const prefecture = prefectures.find(
+            (pref) => pref.prefCode === prefCode
+          );
+          const color = `hsl(${index * 50}, 70%, 50%)`;
+          return (
+            <div key={prefCode} className="legend-item">
+              <span
+                className="legend-color"
+                style={{ backgroundColor: color }}
+              ></span>
+              <span className="legend-name">{prefecture?.prefName}</span>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 };
