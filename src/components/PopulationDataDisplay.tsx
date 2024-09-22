@@ -61,7 +61,6 @@ const PopulationDataDisplay: React.FC<PopulationDataDisplayProps> = ({
   return (
     <div>
       <h2>人口データ：</h2>
-      {selectedPrefectures.length === 0 && <p>都道府県を選択してください。</p>}
 
       <ResponsiveContainer width="100%" height={chartHeight}>
         <LineChart

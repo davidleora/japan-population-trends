@@ -64,6 +64,12 @@ const App: React.FC = () => {
       ) : (
         <>
           <div className="selection-buttons">
+            <p>
+              都道府県を選択してください（複数選択可）：
+              {selectedPrefectures.length > 0
+                ? `選択中 ${selectedPrefectures.length} 件`
+                : '未選択'}
+            </p>
             <button onClick={handleSelectAll}>全てを選択</button>
             <button onClick={handleReset}>リセット</button>
           </div>
