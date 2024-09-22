@@ -13,6 +13,7 @@ const App: React.FC = () => {
   const [populationCategory, setPopulationCategory] =
     useState<string>('総人口');
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [showPrefectureList, setShowPrefectureList] = useState<boolean>(true);
 
   useEffect(() => {
     if (prefectures.length > 0) {
@@ -57,30 +58,49 @@ const App: React.FC = () => {
       <header>
         <h1>都道府県別の総人口推移グラフ</h1>
       </header>
-      <h1>都道府県一覧</h1>
+
+      <p>
+        このウェブサイトでは、日本の都道府県ごとの人口推移をグラフで表示します。
+        以下のリストから都道府県を選択してください。
+      </p>
+
+      <h2
+        className="prefecture-list-title"
+        onClick={() => setShowPrefectureList(!showPrefectureList)}
+        role="button"
+        aria-expanded={showPrefectureList}
+      >
+        都道府県一覧 {showPrefectureList ? '▲' : '▼'}
+      </h2>
 
       {isLoading ? (
         <LoadingDots />
       ) : (
         <>
-          <div className="selection-buttons">
-            <p>
-              都道府県を選択してください（複数選択可）：
-              {selectedPrefectures.length > 0
-                ? `選択中 ${selectedPrefectures.length} 件`
-                : '未選択'}
-            </p>
-            <button onClick={handleSelectAll}>全てを選択</button>
-            <button onClick={handleReset}>リセット</button>
-          </div>
+          {showPrefectureList && (
+            <>
+              <div className="selection-buttons">
+                <p>
+                  都道府県を選択してください（複数選択可）：
+                  {selectedPrefectures.length > 0
+                    ? `選択中 ${selectedPrefectures.length} 件`
+                    : '未選択'}
+                </p>
+                <button onClick={handleSelectAll}>全てを選択</button>
+                <button onClick={handleReset}>リセット</button>
+              </div>
 
-          <PrefectureCheckboxList
-            prefectures={prefectures}
-            selectedPrefectures={selectedPrefectures}
-            onCheckboxChange={handleCheckboxChange}
-          />
+              <PrefectureCheckboxList
+                prefectures={prefectures}
+                selectedPrefectures={selectedPrefectures}
+                onCheckboxChange={handleCheckboxChange}
+              />
+            </>
+          )}
 
-          {/* カテゴリを選択するUIをボタンで表示 */}
+          <h2>人口カテゴリの選択</h2>
+          <p>表示したい人口のカテゴリを選んでください。</p>
+
           <div className="category-buttons">
             <button
               className={populationCategory === '総人口' ? 'active' : ''}
@@ -107,6 +127,8 @@ const App: React.FC = () => {
               老年人口
             </button>
           </div>
+
+          <h2>選択した都道府県の人口推移グラフ</h2>
 
           <PopulationDataDisplay
             selectedPrefectures={selectedPrefectures}

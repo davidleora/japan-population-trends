@@ -202,6 +202,15 @@ label {
   font-weight: 300;
 }
 
+.prefecture-list-title {
+  cursor: pointer;
+  margin-top: 1.5rem;
+}
+
+.prefecture-list-title:hover {
+  text-decoration: underline;
+}
+
 @media (min-width: 320px) {
   html {
     font-size: 10px;
