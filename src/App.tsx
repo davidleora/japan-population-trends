@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
+
 import LoadingDots from './components/LoadingDots';
 import PrefectureCheckboxList from './components/PrefectureCheckboxList';
 import PopulationDataDisplay from './components/PopulationDataDisplay';
+
 import useFetchPrefectures from './hooks/useFetchPrefectures';
 import usePopulationData from './hooks/usePopulationData';
 
 const App: React.FC = () => {
   const { prefectures, error } = useFetchPrefectures();
   const [selectedPrefectures, setSelectedPrefectures] = useState<number[]>([]);
-  const { populationData, fetchPopulationData } = usePopulationData();
+  const { populationData, fetchPopulationData, clearPopulationData } =
+    usePopulationData();
   const [populationCategory, setPopulationCategory] =
     useState<string>('総人口');
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -43,10 +46,14 @@ const App: React.FC = () => {
   const handleSelectAll = () => {
     const allPrefCodes = prefectures.map((pref) => pref.prefCode);
     setSelectedPrefectures(allPrefCodes);
+    allPrefCodes.forEach((prefCode) => {
+      fetchPopulationData(prefCode, populationCategory);
+    });
   };
 
   const handleReset = () => {
     setSelectedPrefectures([]);
+    clearPopulationData();
   };
 
   if (error) {

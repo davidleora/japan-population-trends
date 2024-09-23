@@ -53,7 +53,11 @@ const usePopulationData = () => {
     }
   };
 
-  return { populationData, fetchPopulationData };
+  const clearPopulationData = () => {
+    setPopulationData({});
+  };
+
+  return { populationData, fetchPopulationData, clearPopulationData };
 };
 
 export default usePopulationData;
