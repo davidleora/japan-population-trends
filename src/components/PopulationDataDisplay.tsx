@@ -9,6 +9,7 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 import { useMediaQuery } from 'react-responsive';
+import { regions } from '../constants/regions';
 
 type PopulationData = {
   year: number;
@@ -19,26 +20,6 @@ type PopulationDataDisplayProps = {
   selectedPrefectures: number[];
   prefectures: { prefCode: number; prefName: string }[];
   populationData: Record<number, PopulationData[]>;
-};
-
-const mergePopulationData = (
-  selectedPrefectures: number[],
-  populationData: Record<number, PopulationData[]>
-) => {
-  const mergedData: Record<number, { year: number } & Record<number, number>> =
-    {};
-  selectedPrefectures.forEach((prefCode) => {
-    const data = populationData[prefCode];
-    if (data) {
-      data.forEach((popData) => {
-        if (!mergedData[popData.year]) {
-          mergedData[popData.year] = { year: popData.year };
-        }
-        mergedData[popData.year][prefCode] = popData.value;
-      });
-    }
-  });
-  return Object.values(mergedData).sort((a, b) => a.year - b.year);
 };
 
 const PopulationDataDisplay: React.FC<PopulationDataDisplayProps> = ({
@@ -56,7 +37,40 @@ const PopulationDataDisplay: React.FC<PopulationDataDisplayProps> = ({
     chartHeight = 900;
   }
 
-  const mergedData = mergePopulationData(selectedPrefectures, populationData);
+  const prefectureOrder: number[] = regions.flatMap(
+    (region) => region.prefectures
+  );
+
+  const sortedSelectedPrefectures = selectedPrefectures.slice().sort((a, b) => {
+    return prefectureOrder.indexOf(a) - prefectureOrder.indexOf(b);
+  });
+
+  const mergePopulationData = (
+    sortedSelectedPrefectures: number[],
+    populationData: Record<number, PopulationData[]>
+  ) => {
+    const mergedData: Record<
+      number,
+      { year: number } & Record<number, number>
+    > = {};
+    sortedSelectedPrefectures.forEach((prefCode) => {
+      const data = populationData[prefCode];
+      if (data) {
+        data.forEach((popData) => {
+          if (!mergedData[popData.year]) {
+            mergedData[popData.year] = { year: popData.year };
+          }
+          mergedData[popData.year][prefCode] = popData.value;
+        });
+      }
+    });
+    return Object.values(mergedData).sort((a, b) => a.year - b.year);
+  };
+
+  const mergedData = mergePopulationData(
+    sortedSelectedPrefectures,
+    populationData
+  );
 
   return (
     <div>
@@ -83,7 +97,7 @@ const PopulationDataDisplay: React.FC<PopulationDataDisplayProps> = ({
             }}
           />
           <Tooltip />
-          {selectedPrefectures.map((prefCode, index) => {
+          {sortedSelectedPrefectures.map((prefCode, index) => {
             const prefecture = prefectures.find(
               (pref) => pref.prefCode === prefCode
             );
@@ -103,7 +117,7 @@ const PopulationDataDisplay: React.FC<PopulationDataDisplayProps> = ({
       </ResponsiveContainer>
 
       <div className="custom-legend">
-        {selectedPrefectures.map((prefCode, index) => {
+        {sortedSelectedPrefectures.map((prefCode, index) => {
           const prefecture = prefectures.find(
             (pref) => pref.prefCode === prefCode
           );
