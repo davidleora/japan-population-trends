@@ -1,9 +1,5 @@
 import { useState, useEffect } from 'react';
-
-type Prefecture = {
-  prefCode: number;
-  prefName: string;
-};
+import { Prefecture } from '../types';
 
 const useFetchPrefectures = () => {
   const [prefectures, setPrefectures] = useState<Prefecture[]>([]);

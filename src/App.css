@@ -1,17 +1,59 @@
-html {
-  font-size: 14px;
+:root {
+  --primary-pink: #ffc1e3; /* パステルピンク */
+  --primary-blue: #b3e5fc; /* ライトブルー */
+  --text-color: #333;
+  --header-footer-bg: #fff;
+  --button-bg-hover: rgba(255, 192, 203, 0.2);
+  --active-button-bg: rgba(255, 255, 255, 0.4);
+  --divider-color: #ccc;
+  --text-hover-color: #333;
 }
+
+html {
+  background: linear-gradient(135deg, var(--primary-pink), var(--primary-blue));
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+  overscroll-behavior: none;
+}
+
 body {
-  font-family: Arial, sans-serif;
+  font-family: 'M PLUS Rounded 1c', sans-serif;
+  font-weight: 300;
+  color: var(--text-color);
   margin: 0;
   padding: 1rem;
-  background-color: #f9f9f9;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  max-width: 100%;
 }
 
 h1 {
-  font-size: 2rem;
+  font-size: 1.5rem;
   text-align: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+header,
+footer {
+  background-color: var(--header-footer-bg);
+  color: var(--text-color);
+  padding: 1rem;
+  text-align: center;
+  font-weight: bold;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+header {
+  font-size: 1.5rem;
+}
+
+footer {
+  font-size: 0.875rem;
+  color: #666;
+  margin-top: auto;
+  box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
 }
 
 ul {
@@ -20,6 +62,7 @@ ul {
   gap: 0.5rem;
   list-style-type: none;
   padding: 0;
+  margin: 0;
 }
 
 li {
@@ -29,41 +72,171 @@ li {
 }
 
 input[type='checkbox'] {
+  accent-color: var(--primary-pink);
+  transform: scale(1.2);
   margin-right: 0.5rem;
 }
 
 label {
   font-size: 1rem;
+  color: var(--text-color);
   white-space: nowrap;
+}
+
+.selection-buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.selection-buttons p {
+  margin: 0;
+  flex-grow: 1;
+  font-size: 0.95rem;
+}
+
+.selection-buttons button {
+  padding: 0.25rem 0.5rem;
+  margin-left: 0.5rem;
+  border: #ff50b0c3 1px solid;
+  background-color: #e0e0e0;
+  cursor: pointer;
+  transition:
+    background-color 0.3s ease,
+    transform 0.2s,
+    box-shadow 0.2s;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+.selection-buttons button:hover {
+  background-color: #ccc;
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
 .category-buttons {
   margin-top: 1rem;
   display: flex;
   justify-content: center;
-  gap: 0.5rem;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 }
 
 .category-buttons button {
-  padding: 0.5rem 1rem;
-  font-size: 1rem;
-  border: 1px solid #ccc;
-  background-color: white;
+  flex: 1;
+  padding: 0.75rem 0.25rem;
+  font-size: 0.9rem;
+  border: none;
+  background-color: transparent;
   cursor: pointer;
   transition:
     background-color 0.3s,
-    font-weight 0.3s;
-  flex: 1 1 100px;
+    font-weight 0.3s,
+    color 0.3s,
+    transform 0.2s,
+    box-shadow 0.2s;
+  color: #000;
+  border-right: 1px solid var(--divider-color);
+  box-sizing: border-box;
+}
+
+.category-buttons button:last-child {
+  border-right: none;
 }
 
 .category-buttons button:hover {
-  background-color: #f0f0f0;
+  background-color: var(--button-bg-hover);
+  color: var(--text-hover-color);
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
 .category-buttons button.active {
   font-weight: bold;
-  background-color: #e0e0e0;
+  background-color: var(--active-button-bg);
+  color: var(--text-color);
+}
+
+.loading-dots div {
+  background-color: var(--primary-pink);
+}
+
+.recharts-wrapper {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #f7f7f7;
+  border-radius: 5px;
+}
+
+.recharts-legend-wrapper {
+  text-align: center;
+  padding-top: 2rem;
+}
+
+.custom-legend {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  margin: 0.5rem 1rem;
+}
+
+.legend-color {
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+  margin-right: 0.5rem;
+  border-radius: 50%;
+  border: 2px solid #ccc;
+}
+
+.legend-name {
+  font-size: 1rem;
+  font-weight: 300;
+}
+
+.prefecture-list-title {
+  cursor: pointer;
+  margin-top: 1.5rem;
+}
+
+.prefecture-list-title:hover {
+  text-decoration: underline;
+}
+
+@media (min-width: 320px) {
+  html {
+    font-size: 10px;
+  }
+
+  h1 {
+    font-size: 1.75rem;
+    margin-bottom: 1.25rem;
+  }
+
+  label {
+    font-size: 1rem;
+  }
+
+  .selection-buttons p {
+    font-size: 1rem;
+  }
+
+  .selection-buttons button {
+    font-size: 0.85rem;
+    padding: 0.25rem 0.5rem;
+  }
+
+  .category-buttons button {
+    font-size: 0.9rem;
+  }
 }
 
 @media (min-width: 768px) {
@@ -76,21 +249,12 @@ label {
     margin-bottom: 2rem;
   }
 
-  li {
-    margin-bottom: 1.5rem;
-  }
-
   label {
     font-size: 1.125rem;
   }
 
-  .category-buttons {
-    gap: 1rem;
-  }
-
   .category-buttons button {
-    font-size: 1.125rem;
-    flex: 1 1 150px;
+    font-size: 1rem;
   }
 }
 
@@ -114,6 +278,5 @@ label {
 
   .category-buttons button {
     font-size: 1.25rem;
-    flex: 1 1 200px;
   }
 }
