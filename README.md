@@ -1,50 +1,130 @@
-# React + TypeScript + Vite
+# 都道府県別の総人口推移ビューア
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+都道府県別の人口推移を視覚的に表示する**React＋TypeScript**アプリケーションです。
 
-Currently, two official plugins are available:
+## 概要
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+このプロジェクトは、日本の各都道府県の人口データを取得し、年ごとの人口推移をグラフで表示します。ユーザーは調べたい都道府県を選択し、「総人口」「年少人口」「生産年齢人口」「老年人口」のカテゴリー別に人口データを閲覧できます。
 
-## Expanding the ESLint configuration
+デモサイトはこちら：**[日本人口推移ビューア](https://japanpopulationtrends.web.app/)**
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## 目次
 
-- Configure the top-level `parserOptions` property like this:
+- [インストール方法](#インストール方法)
+- [使い方](#使い方)
+- [使用技術](#使用技術)
+- [主要依存関係](#主要依存関係)
+- [APIについて](#apiについて)
+- [プロジェクト構成](#プロジェクト構成)
+- [著者](#著者)
+- [謝辞](#謝辞)
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+## インストール方法
+
+1. リポジトリをクローンします。
+
+```bash
+git clone https://github.com/davidleora/japan-population-trends.git
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+2. ディレクトリに移動します。
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+```bash
+cd japan-population-trends
 ```
+
+3. 必要なパッケージをインストールします。
+
+```bash
+npm install
+```
+
+4. RESAS APIのAPIキーを取得し、プロジェクトのルートディレクトリに`.env`ファイルを作成して設定します。
+
+```bash
+VITE_RESAS_API_KEY=あなたのAPIキー
+```
+
+## 使い方
+
+1. アプリケーションを開発モードで起動します。
+
+```bash
+npm run dev
+```
+
+2. ブラウザで`http://localhost:5173/`を開きます。
+3. 都道府県の一覧から興味のある都道府県を選択します。
+4. 表示したい人口のカテゴリーを選択します（**総人口**、**年少人口**、**生産年齢人口**、**老年人口**）。
+5. 選択した都道府県の人口推移がグラフに表示されます。
+
+## 使用技術
+
+- **React**：ユーザーインターフェースの構築
+- **TypeScript**：型安全なコードのための静的型付け
+- **Recharts**：レスポンシブなグラフ描画ライブラリ
+- **Vite**：高速なフロントエンドビルドツール
+- **RESAS API**：日本の統計データを取得
+
+## 主要依存関係
+
+- `react`: ^18.3.1
+- `react-dom`: ^18.3.1
+- `react-responsive`: ^10.0.0
+- `recharts`: ^2.13.0-alpha.5
+- `styled-components`: ^6.1.13
+- `typescript`: ^5.5.3
+- `vite`: ^5.4.1
+- `eslint`: ^9.10.0
+- `prettier`: ^3.3.3
+- `vitest`: ^2.1.0
+
+## APIについて
+
+このアプリケーションは、[RESAS(地域経済分析システム)](https://opendata.resas-portal.go.jp/)のAPIを使用して人口データを取得しています。APIを利用するためには、RESASの公式サイトから**APIキーを取得**する必要があります。
+
+## プロジェクト構成
+
+<pre>
+src
+├── App.css
+├── App.tsx
+├── assets
+│ └── react.svg
+├── components
+│ ├── LoadingDots.css
+│ ├── LoadingDots.tsx
+│ ├── PopulationDataDisplay.tsx
+│ ├── PrefectureCheckboxList.tsx
+│ └── **tests**
+│ └── PrefectureCheckboxList.test.tsx
+├── constants
+│ └── regions.ts
+├── hooks
+│ ├── useFetchPrefectures.ts
+│ └── usePopulationData.ts
+├── main.tsx
+├── types.ts
+└── vite-env.d.ts
+</pre>
+
+## 主なファイルとディレクトリ
+
+- `App.tsx`：アプリケーションのメインコンポーネント
+  - 都道府県データの取得と、ユーザーインターフェースの統合を行います。
+- `components/`：UIコンポーネントを格納
+  - `PrefectureCheckboxList.tsx`：都道府県のチェックボックスリストを表示
+  - `PopulationDataDisplay.tsx`：人口データをグラフで表示
+  - `LoadingDots.tsx`：データ取得中のローディング表示
+- `hooks/`：カスタムフックを格納
+  - `useFetchPrefectures.ts`：都道府県データをAPIから取得するフック
+  - `usePopulationData.ts`：人口データをAPIから取得し、状態管理するフック
+
+## 著者
+
+- David Leora - (https://github.com/davidleora)
+
+## 謝辞
+
+- [RESAS-API](https://opendata.resas-portal.go.jp/)を提供している**経済産業省と内閣官房デジタル田園都市国家構想実現会議事務局**
+- **Recharts**の開発者コミュニティ
