@@ -6,6 +6,6 @@
   ],
   "compilerOptions": {
     "jsx": "react-jsx",
-    "types": ["vitest", "node"]
+    "types": ["vitest/globals", "node"]
   },
 }
