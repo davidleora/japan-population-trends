@@ -142,4 +142,26 @@ describe('PopulationDataDisplay', () => {
     expect(legendItems[0]).toHaveTextContent('北海道');
     expect(legendItems[1]).toHaveTextContent('青森県');
   });
+
+  it('displays a message when no prefectures are selected', () => {
+    const mockPrefectures = [
+      { prefCode: 1, prefName: '北海道' },
+      { prefCode: 2, prefName: '青森県' },
+    ];
+
+    const mockPopulationData = {
+      1: [{ year: 2000, value: 5000000 }],
+      2: [{ year: 2000, value: 1500000 }],
+    };
+
+    render(
+      <PopulationDataDisplay
+        selectedPrefectures={[]}
+        prefectures={mockPrefectures}
+        populationData={mockPopulationData}
+      />
+    );
+
+    expect(screen.getByText('都道府県を選択してください')).toBeInTheDocument();
+  });
 });

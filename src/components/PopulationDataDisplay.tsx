@@ -37,6 +37,10 @@ const PopulationDataDisplay: React.FC<PopulationDataDisplayProps> = ({
     chartHeight = 900;
   }
 
+  if (selectedPrefectures.length === 0) {
+    return <p>都道府県を選択してください</p>;
+  }
+
   const prefectureOrder: number[] = regions.flatMap(
     (region) => region.prefectures
   );
