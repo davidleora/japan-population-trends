@@ -123,7 +123,11 @@ const PopulationDataDisplay: React.FC<PopulationDataDisplayProps> = ({
           );
           const color = `hsl(${index * 50}, 70%, 50%)`;
           return (
-            <div key={prefCode} className="legend-item">
+            <div
+              key={prefCode}
+              className="legend-item"
+              data-testid="legend-item"
+            >
               <span
                 className="legend-color"
                 style={{ backgroundColor: color }}

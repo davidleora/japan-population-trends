@@ -2,9 +2,10 @@ import { render, screen } from '@testing-library/react';
 import { vi, Mock } from 'vitest';
 import { useMediaQuery } from 'react-responsive';
 import PopulationDataDisplay from '../PopulationDataDisplay';
+import * as Recharts from 'recharts';
+import * as ReactResponsive from 'react-responsive';
 import '@testing-library/jest-dom';
 
-// ResizeObserverのモックを追加
 beforeAll(() => {
   (global as any).ResizeObserver = class {
     observe() {}
@@ -14,11 +15,9 @@ beforeAll(() => {
 });
 
 vi.mock('recharts', async () => {
-  const OriginalRecharts = await vi.importActual<any>('recharts');
+  const OriginalRecharts = await vi.importActual<typeof Recharts>('recharts');
   return {
-    // 他の Recharts コンポーネントを展開
     ...OriginalRecharts,
-    // 必要なコンポーネントをすべてモック
     ResponsiveContainer: ({ children }: any) => <div>{children}</div>,
     LineChart: ({ children }: any) => <div>{children}</div>,
     Line: ({ dataKey }: any) => <div data-testid={`line-${dataKey}`} />,
@@ -31,7 +30,7 @@ vi.mock('recharts', async () => {
 });
 
 vi.mock('react-responsive', () => ({
-  ...vi.importActual<any>('react-responsive'),
+  ...vi.importActual<typeof ReactResponsive>('react-responsive'),
   useMediaQuery: vi.fn(),
 }));
 
@@ -55,7 +54,6 @@ describe('PopulationDataDisplay', () => {
 
     const mockSelectedPrefectures = [1, 2];
 
-    // コンポーネントをレンダリングします
     const { container } = render(
       <PopulationDataDisplay
         selectedPrefectures={mockSelectedPrefectures}
@@ -117,5 +115,31 @@ describe('PopulationDataDisplay', () => {
 
     const lines = screen.getAllByTestId(/line-/);
     expect(lines.length).toBe(2);
+  });
+
+  it('renders correct legend items for selected prefectures', () => {
+    const mockPrefectures = [
+      { prefCode: 1, prefName: '北海道' },
+      { prefCode: 2, prefName: '青森県' },
+    ];
+
+    const mockPopulationData = {
+      1: [{ year: 2000, value: 5000000 }],
+      2: [{ year: 2000, value: 1500000 }],
+    };
+
+    render(
+      <PopulationDataDisplay
+        selectedPrefectures={[1, 2]}
+        prefectures={mockPrefectures}
+        populationData={mockPopulationData}
+      />
+    );
+
+    const legendItems = screen.getAllByTestId('legend-item');
+    expect(legendItems.length).toBe(2);
+
+    expect(legendItems[0]).toHaveTextContent('北海道');
+    expect(legendItems[1]).toHaveTextContent('青森県');
   });
 });
