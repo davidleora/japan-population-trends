@@ -5,22 +5,21 @@ import PopulationDataDisplay from '../PopulationDataDisplay';
 import * as Recharts from 'recharts';
 import * as ReactResponsive from 'react-responsive';
 import '@testing-library/jest-dom';
-
-beforeAll(() => {
-  (global as any).ResizeObserver = class {
-    observe() {}
-    unobserve() {}
-    disconnect() {}
-  };
-});
+import React from 'react';
 
 vi.mock('recharts', async () => {
   const OriginalRecharts = await vi.importActual<typeof Recharts>('recharts');
   return {
     ...OriginalRecharts,
-    ResponsiveContainer: ({ children }: any) => <div>{children}</div>,
-    LineChart: ({ children }: any) => <div>{children}</div>,
-    Line: ({ dataKey }: any) => <div data-testid={`line-${dataKey}`} />,
+    ResponsiveContainer: ({ children }: { children: React.ReactNode }) => (
+      <div>{children}</div>
+    ),
+    LineChart: ({ children }: { children: React.ReactNode }) => (
+      <div>{children}</div>
+    ),
+    Line: ({ dataKey }: { dataKey: string | number }) => (
+      <div data-testid={`line-${dataKey}`} />
+    ),
     XAxis: () => <div data-testid="x-axis" />,
     YAxis: () => <div data-testid="y-axis" />,
     Tooltip: () => <div data-testid="tooltip" />,
