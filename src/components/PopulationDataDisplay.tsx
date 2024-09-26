@@ -10,7 +10,7 @@ import {
 } from 'recharts';
 import { useMediaQuery } from 'react-responsive';
 import { regions } from '../constants/regions';
-import CustomTooltip from './CustomToolTip';
+import CustomToolTip from './CustomToolTip';
 
 type PopulationData = {
   year: number;
@@ -123,7 +123,7 @@ const PopulationDataDisplay: React.FC<PopulationDataDisplayProps> = ({
               fontSize: isMobile ? '9px' : isTablet ? '11px' : '13px',
             }}
           />
-          <Tooltip content={<CustomTooltip />} />
+          <Tooltip content={<CustomToolTip />} />
           {sortedSelectedPrefectures.map((prefCode, index) => {
             const prefecture = prefectures.find(
               (pref) => pref.prefCode === prefCode

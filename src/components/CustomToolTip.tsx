@@ -1,11 +1,11 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useLayoutEffect, useRef } from 'react';
 import { TooltipProps } from 'recharts';
-import './CustomTooltip.css';
+import './CustomToolTip.css';
 
 const SCROLL_SPEED = 1; // ピクセル/インターバル
 const SCROLL_INTERVAL = 50; // ミリ秒
 
-const CustomTooltip: React.FC<TooltipProps<number, string>> = ({
+const CustomToolTip: React.FC<TooltipProps<number, string>> = ({
   active,
   payload,
   label,
@@ -14,7 +14,7 @@ const CustomTooltip: React.FC<TooltipProps<number, string>> = ({
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const scrollIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     // ツールチップが表示されたときにスクロールを開始
     if (active && payload && payload.length > 0) {
       const scrollContainer = scrollContainerRef.current;
@@ -57,7 +57,11 @@ const CustomTooltip: React.FC<TooltipProps<number, string>> = ({
   return (
     <div className="custom-tooltip">
       <p className="label">{`年: ${label}`}</p>
-      <div className="scrolling-container" ref={scrollContainerRef}>
+      <div
+        className="scrolling-container"
+        ref={scrollContainerRef}
+        data-testid="scroll-container"
+      >
         <ul className="payload-list" ref={scrollingRef}>
           {sortedPayload.map((entry) => (
             <li key={entry.dataKey} className="payload-item">
@@ -67,7 +71,7 @@ const CustomTooltip: React.FC<TooltipProps<number, string>> = ({
               ></span>
               <span className="payload-name">{entry.name}</span>:{' '}
               <span className="payload-value">
-                {entry.value?.toLocaleString()}
+                {entry.value !== undefined ? entry.value.toLocaleString() : '0'}
               </span>
             </li>
           ))}
@@ -77,4 +81,4 @@ const CustomTooltip: React.FC<TooltipProps<number, string>> = ({
   );
 };
 
-export default CustomTooltip;
+export default CustomToolTip;
