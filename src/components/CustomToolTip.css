@@ -1,0 +1,51 @@
+.custom-tooltip {
+  background-color: rgba(50, 50, 50, 0.9);
+  color: #fff;
+  padding: 5px 10px 10px 10px;
+  border-radius: 5px;
+  max-width: 250px;
+  pointer-events: auto;
+}
+
+.custom-tooltip .label {
+  font-size: 14px;
+  margin: 0 0 5px 0;
+}
+
+.scrolling-container {
+  overflow: hidden;
+  height: 200px;
+  position: relative;
+}
+
+.payload-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.payload-item {
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  margin-bottom: 3px;
+}
+
+.payload-item:last-child {
+  margin-bottom: 0;
+}
+
+.payload-color {
+  width: 10px;
+  height: 10px;
+  display: inline-block;
+  margin-right: 5px;
+}
+
+.payload-name {
+  margin-right: 5px;
+}
+
+.payload-value {
+  font-weight: bold;
+}
