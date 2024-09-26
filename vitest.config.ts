@@ -6,7 +6,15 @@ export default defineConfig({
     globals: true,
     setupFiles: './setupTests.ts',
     coverage: {
-      exclude: ['src/main.tsx', 'src/types.ts'],
+      exclude: [
+        'src/main.tsx', 
+        'src/types.ts', 
+        'src/vite-env.d.ts',
+        '**/*.config.js', 
+        '**/*.config.ts', 
+        'dist/**',
+        'node_modules/**'
+      ],
     },
   },
 });
