@@ -22,7 +22,6 @@ describe('useFetchPrefectures', () => {
 
     const { result } = renderHook(() => useFetchPrefectures());
 
-    // 非同期の状態更新を待つ
     await waitFor(() => {
       expect(result.current.prefectures).toEqual(mockPrefectures);
       expect(result.current.error).toBeNull();
@@ -34,7 +33,6 @@ describe('useFetchPrefectures', () => {
 
     const { result } = renderHook(() => useFetchPrefectures());
 
-    // 非同期の状態更新を待つ
     await waitFor(() => {
       expect(result.current.prefectures).toEqual([]);
       expect(result.current.error).toEqual('Failed to fetch');
@@ -44,14 +42,13 @@ describe('useFetchPrefectures', () => {
   it('response.ok が false の場合、エラーが設定される', async () => {
     global.fetch = vi.fn(() =>
       Promise.resolve({
-        ok: false, // response.ok が false になる
+        ok: false,
         json: () => Promise.resolve({}),
       } as Response)
     );
 
     const { result } = renderHook(() => useFetchPrefectures());
 
-    // 非同期の状態更新を待つ
     await waitFor(() => {
       expect(result.current.prefectures).toEqual([]);
       expect(result.current.error).toEqual('Failed to fetch prefectures');
@@ -59,14 +56,12 @@ describe('useFetchPrefectures', () => {
   });
 
   it('未知のエラーが発生した場合、"An unknown error occurred" が設定される', async () => {
-    // fetch の挙動を変更して、Error 以外の値を投げる
     global.fetch = vi.fn(() => {
-      throw 'Some unknown error'; // Error ではなく、文字列を投げる
+      throw 'Some unknown error';
     });
 
     const { result } = renderHook(() => useFetchPrefectures());
 
-    // 非同期の状態更新を待つ
     await waitFor(() => {
       expect(result.current.prefectures).toEqual([]);
       expect(result.current.error).toEqual('An unknown error occurred');
