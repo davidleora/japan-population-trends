@@ -51,7 +51,3 @@ jobs:
         with:
           name: coverage-report
           path: coverage
-
-      - name: Display coverage report
-        run: |
-          cat ./coverage/lcov-report/index.html
