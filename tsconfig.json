@@ -6,6 +6,7 @@
   ],
   "compilerOptions": {
     "jsx": "react-jsx",
-    "types": ["vitest", "node"]
+    "types": ["vitest/globals"],
+    "lib": ["esnext", "dom"],
   },
 }
