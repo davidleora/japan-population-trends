@@ -1,4 +1,4 @@
-import { render, screen, act } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import CustomToolTip from '../CustomToolTip';
 import { TooltipProps } from 'recharts';
 import { vi } from 'vitest';
