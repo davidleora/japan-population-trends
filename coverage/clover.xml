@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1727312765573" clover="3.2.0">
-  <project timestamp="1727312765573" name="All files">
+<coverage generated="1727314302706" clover="3.2.0">
+  <project timestamp="1727314302706" name="All files">
     <metrics statements="33" coveredstatements="33" conditionals="8" coveredconditionals="8" methods="2" coveredmethods="2" elements="43" coveredelements="43" complexity="0" loc="33" ncloc="33" packages="1" files="1" classes="1"/>
     <file name="useFetchPrefectures.ts" path="/Users/davidleora/Projects/japan-population-trends/src/hooks/useFetchPrefectures.ts">
       <metrics statements="33" coveredstatements="33" conditionals="8" coveredconditionals="8" methods="2" coveredmethods="2"/>

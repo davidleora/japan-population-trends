@@ -22,6 +22,16 @@ type PopulationDataDisplayProps = {
   populationData: Record<number, PopulationData[]>;
 };
 
+export const getChartHeight = (isMobile: boolean, isTablet: boolean) => {
+  if (isTablet && !isMobile) {
+    return 700;
+  } else if (!isTablet) {
+    return 900;
+  } else {
+    return 500;
+  }
+};
+
 const PopulationDataDisplay: React.FC<PopulationDataDisplayProps> = ({
   selectedPrefectures,
   prefectures,
@@ -30,12 +40,7 @@ const PopulationDataDisplay: React.FC<PopulationDataDisplayProps> = ({
   const isMobile = useMediaQuery({ query: '(max-width: 768px)' });
   const isTablet = useMediaQuery({ query: '(max-width: 1024px)' });
 
-  let chartHeight = 500;
-  if (isTablet && !isMobile) {
-    chartHeight = 700;
-  } else if (!isTablet) {
-    chartHeight = 900;
-  }
+  const chartHeight = getChartHeight(isMobile, isTablet);
 
   if (selectedPrefectures.length === 0) {
     return <p>都道府県を選択してください</p>;

@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { vi, Mock } from 'vitest';
 import { useMediaQuery } from 'react-responsive';
+import { getChartHeight } from '../PopulationDataDisplay';
 import PopulationDataDisplay from '../PopulationDataDisplay';
 import * as Recharts from 'recharts';
 import * as ReactResponsive from 'react-responsive';
@@ -33,8 +34,22 @@ vi.mock('react-responsive', () => ({
   useMediaQuery: vi.fn(),
 }));
 
+describe('getChartHeight', () => {
+  it('モバイルの場合は500を返す', () => {
+    expect(getChartHeight(true, true)).toBe(500);
+  });
+
+  it('タブレットの場合は700を返す', () => {
+    expect(getChartHeight(false, true)).toBe(700);
+  });
+
+  it('デスクトップの場合は900を返す', () => {
+    expect(getChartHeight(false, false)).toBe(900);
+  });
+});
+
 describe('PopulationDataDisplay', () => {
-  it('renders without crashing', () => {
+  it('正常にレンダリングされることを確認', () => {
     const mockPrefectures = [
       { prefCode: 1, prefName: '北海道' },
       { prefCode: 2, prefName: '青森県' },
@@ -64,7 +79,7 @@ describe('PopulationDataDisplay', () => {
     expect(container).toBeInTheDocument();
   });
 
-  it('renders correctly on mobile devices', () => {
+  it('モバイルデバイスで正しくレンダリングされることを確認', () => {
     (useMediaQuery as Mock).mockReturnValueOnce(true);
 
     const mockPrefectures = [{ prefCode: 1, prefName: '北海道' }];
@@ -87,7 +102,7 @@ describe('PopulationDataDisplay', () => {
     expect(container).toBeInTheDocument();
   });
 
-  it('renders correct number of lines in the chart', async () => {
+  it('都道府県の数に応じて正しいライン数がレンダリングされることを確認', async () => {
     const mockPrefectures = [
       { prefCode: 1, prefName: '北海道' },
       { prefCode: 2, prefName: '青森県' },
@@ -116,7 +131,7 @@ describe('PopulationDataDisplay', () => {
     expect(lines.length).toBe(2);
   });
 
-  it('renders correct legend items for selected prefectures', () => {
+  it('選択された都道府県の凡例アイテムが正しくレンダリングされる', () => {
     const mockPrefectures = [
       { prefCode: 1, prefName: '北海道' },
       { prefCode: 2, prefName: '青森県' },
@@ -142,7 +157,7 @@ describe('PopulationDataDisplay', () => {
     expect(legendItems[1]).toHaveTextContent('青森県');
   });
 
-  it('displays a message when no prefectures are selected', () => {
+  it('都道府県が選択されていない場合にメッセージが表示される', () => {
     const mockPrefectures = [
       { prefCode: 1, prefName: '北海道' },
       { prefCode: 2, prefName: '青森県' },

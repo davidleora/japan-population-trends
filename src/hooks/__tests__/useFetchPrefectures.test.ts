@@ -1,4 +1,4 @@
-import { renderHook, act, waitFor } from '@testing-library/react';
+import { renderHook, waitFor } from '@testing-library/react';
 import useFetchPrefectures from '../useFetchPrefectures';
 import { vi } from 'vitest';
 
@@ -30,9 +30,7 @@ describe('useFetchPrefectures', () => {
   });
 
   it('フェッチに失敗した場合、エラーが設定される', async () => {
-    global.fetch = vi.fn(() =>
-      Promise.reject(new Error('Failed to fetch'))
-    );
+    global.fetch = vi.fn(() => Promise.reject(new Error('Failed to fetch')));
 
     const { result } = renderHook(() => useFetchPrefectures());
 
@@ -50,9 +48,9 @@ describe('useFetchPrefectures', () => {
         json: () => Promise.resolve({}),
       } as Response)
     );
-  
+
     const { result } = renderHook(() => useFetchPrefectures());
-  
+
     // 非同期の状態更新を待つ
     await waitFor(() => {
       expect(result.current.prefectures).toEqual([]);
@@ -65,13 +63,13 @@ describe('useFetchPrefectures', () => {
     global.fetch = vi.fn(() => {
       throw 'Some unknown error'; // Error ではなく、文字列を投げる
     });
-  
+
     const { result } = renderHook(() => useFetchPrefectures());
-  
+
     // 非同期の状態更新を待つ
     await waitFor(() => {
       expect(result.current.prefectures).toEqual([]);
       expect(result.current.error).toEqual('An unknown error occurred');
     });
-  });  
+  });
 });
