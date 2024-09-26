@@ -1,20 +1,47 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { TooltipProps } from 'recharts';
-import './CustomTooltip.css'; // スタイルを調整するCSSファイルを用意
+import './CustomTooltip.css';
 
-const ITEMS_PER_PAGE = 20; // 各ページに表示するアイテム数
+const SCROLL_SPEED = 1; // ピクセル/インターバル
+const SCROLL_INTERVAL = 50; // ミリ秒
 
 const CustomTooltip: React.FC<TooltipProps<number, string>> = ({
   active,
   payload,
   label,
 }) => {
-  const [currentPage, setCurrentPage] = useState(0);
+  const scrollingRef = useRef<HTMLUListElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const scrollIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  // payload が変わったら currentPage をリセット
   useEffect(() => {
-    setCurrentPage(0);
-  }, [payload]);
+    // ツールチップが表示されたときにスクロールを開始
+    if (active && payload && payload.length > 0) {
+      const scrollContainer = scrollContainerRef.current;
+      const scrollingList = scrollingRef.current;
+      if (scrollContainer && scrollingList) {
+        const totalScrollHeight =
+          scrollingList.scrollHeight - scrollContainer.clientHeight;
+        if (totalScrollHeight > 0) {
+          scrollIntervalRef.current = setInterval(() => {
+            if (scrollContainer.scrollTop < totalScrollHeight) {
+              scrollContainer.scrollTop += SCROLL_SPEED;
+            } else {
+              scrollContainer.scrollTop = 0; // スクロールが終わったらリセット
+            }
+          }, SCROLL_INTERVAL);
+        }
+      }
+    }
+
+    // クリーンアップ関数：ツールチップが非表示になったときにスクロールを停止
+    return () => {
+      if (scrollIntervalRef.current) {
+        clearInterval(scrollIntervalRef.current);
+        scrollIntervalRef.current = null;
+      }
+    };
+  }, [active, payload]);
 
   if (!active || !payload || payload.length === 0) {
     return null;
@@ -27,51 +54,25 @@ const CustomTooltip: React.FC<TooltipProps<number, string>> = ({
     return bValue - aValue;
   });
 
-  // ページングのデータ
-  const totalPages = Math.ceil(sortedPayload.length / ITEMS_PER_PAGE);
-  const startIndex = currentPage * ITEMS_PER_PAGE;
-  const endIndex = startIndex + ITEMS_PER_PAGE;
-  const pageData = sortedPayload.slice(startIndex, endIndex);
-
-  // ページングのコントロール
-  const handlePrevPage = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setCurrentPage((prev) => (prev === 0 ? totalPages - 1 : prev - 1));
-  };
-
-  const handleNextPage = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setCurrentPage((prev) => (prev === totalPages - 1 ? 0 : prev + 1));
-  };
-
   return (
     <div className="custom-tooltip">
       <p className="label">{`年: ${label}`}</p>
-      <ul className="payload-list">
-        {pageData.map((entry) => (
-          <li key={entry.dataKey} className="payload-item">
-            <span
-              className="payload-color"
-              style={{ backgroundColor: entry.color }}
-            ></span>
-            <span className="payload-name">{entry.name}</span>:{' '}
-            <span className="payload-value">
-              {entry.value?.toLocaleString()}
-            </span>
-          </li>
-        ))}
-      </ul>
-      {totalPages > 1 && (
-        <div className="pagination-controls">
-          <button onClick={handlePrevPage} className="pagination-button">
-            ◀
-          </button>
-          <span>{`${currentPage + 1} / ${totalPages}`}</span>
-          <button onClick={handleNextPage} className="pagination-button">
-            ▶
-          </button>
-        </div>
-      )}
+      <div className="scrolling-container" ref={scrollContainerRef}>
+        <ul className="payload-list" ref={scrollingRef}>
+          {sortedPayload.map((entry) => (
+            <li key={entry.dataKey} className="payload-item">
+              <span
+                className="payload-color"
+                style={{ backgroundColor: entry.color }}
+              ></span>
+              <span className="payload-name">{entry.name}</span>:{' '}
+              <span className="payload-value">
+                {entry.value?.toLocaleString()}
+              </span>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 };

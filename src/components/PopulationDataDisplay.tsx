@@ -123,7 +123,7 @@ const PopulationDataDisplay: React.FC<PopulationDataDisplayProps> = ({
               fontSize: isMobile ? '9px' : isTablet ? '11px' : '13px',
             }}
           />
-          <Tooltip content={CustomTooltip} />
+          <Tooltip content={<CustomTooltip />} />
           {sortedSelectedPrefectures.map((prefCode, index) => {
             const prefecture = prefectures.find(
               (pref) => pref.prefCode === prefCode
