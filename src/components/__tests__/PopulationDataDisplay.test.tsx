@@ -8,6 +8,7 @@ import * as ReactResponsive from 'react-responsive';
 import '@testing-library/jest-dom';
 import React from 'react';
 
+// Rechartsコンポーネントをモック
 vi.mock('recharts', async () => {
   const OriginalRecharts = await vi.importActual<typeof Recharts>('recharts');
   return {
@@ -29,6 +30,7 @@ vi.mock('recharts', async () => {
   };
 });
 
+// react-responsiveのモック
 vi.mock('react-responsive', () => ({
   ...vi.importActual<typeof ReactResponsive>('react-responsive'),
   useMediaQuery: vi.fn(),
@@ -49,23 +51,28 @@ describe('getChartHeight', () => {
 });
 
 describe('PopulationDataDisplay', () => {
-  it('正常にレンダリングされることを確認', () => {
-    const mockPrefectures = [
-      { prefCode: 1, prefName: '北海道' },
-      { prefCode: 2, prefName: '青森県' },
-    ];
+  const mockPrefectures = [
+    { prefCode: 1, prefName: '北海道' },
+    { prefCode: 2, prefName: '青森県' },
+  ];
 
-    const mockPopulationData = {
-      1: [
-        { year: 2000, value: 5000000 },
-        { year: 2005, value: 5500000 },
-      ],
-      2: [
-        { year: 2000, value: 1500000 },
-        { year: 2005, value: 1400000 },
-      ],
-    };
+  const mockPopulationData = {
+    1: [
+      { year: 2000, value: 5000000 },
+      { year: 2005, value: 5500000 },
+    ],
+    2: [
+      { year: 2000, value: 1500000 },
+      { year: 2005, value: 1400000 },
+    ],
+  };
 
+  beforeEach(() => {
+    // デフォルトでデスクトップ表示としてモック
+    (useMediaQuery as Mock).mockReturnValue(false);
+  });
+
+  it('コンポーネントが正常にレンダリングされる', () => {
     const mockSelectedPrefectures = [1, 2];
 
     const { container } = render(
@@ -79,17 +86,8 @@ describe('PopulationDataDisplay', () => {
     expect(container).toBeInTheDocument();
   });
 
-  it('モバイルデバイスで正しくレンダリングされることを確認', () => {
-    (useMediaQuery as Mock).mockReturnValueOnce(true);
-
-    const mockPrefectures = [{ prefCode: 1, prefName: '北海道' }];
-
-    const mockPopulationData = {
-      1: [
-        { year: 2000, value: 5000000 },
-        { year: 2005, value: 5500000 },
-      ],
-    };
+  it('モバイルデバイスで正しくレンダリングされる', () => {
+    (useMediaQuery as Mock).mockReturnValueOnce(true); // モバイル表示
 
     const { container } = render(
       <PopulationDataDisplay
@@ -102,23 +100,7 @@ describe('PopulationDataDisplay', () => {
     expect(container).toBeInTheDocument();
   });
 
-  it('都道府県の数に応じて正しいライン数がレンダリングされることを確認', async () => {
-    const mockPrefectures = [
-      { prefCode: 1, prefName: '北海道' },
-      { prefCode: 2, prefName: '青森県' },
-    ];
-
-    const mockPopulationData = {
-      1: [
-        { year: 2000, value: 5000000 },
-        { year: 2005, value: 5500000 },
-      ],
-      2: [
-        { year: 2000, value: 1500000 },
-        { year: 2005, value: 1400000 },
-      ],
-    };
-
+  it('選択された都道府県に応じて正しいライン数がレンダリングされる', async () => {
     render(
       <PopulationDataDisplay
         selectedPrefectures={[1, 2]}
@@ -128,20 +110,10 @@ describe('PopulationDataDisplay', () => {
     );
 
     const lines = screen.getAllByTestId(/line-/);
-    expect(lines.length).toBe(2);
+    expect(lines.length).toBe(2); // 2つの都道府県に対応するラインがレンダリングされている
   });
 
-  it('選択された都道府県の凡例アイテムが正しくレンダリングされる', () => {
-    const mockPrefectures = [
-      { prefCode: 1, prefName: '北海道' },
-      { prefCode: 2, prefName: '青森県' },
-    ];
-
-    const mockPopulationData = {
-      1: [{ year: 2000, value: 5000000 }],
-      2: [{ year: 2000, value: 1500000 }],
-    };
-
+  it('選択された都道府県の凡例が正しく表示される', () => {
     render(
       <PopulationDataDisplay
         selectedPrefectures={[1, 2]}
@@ -158,16 +130,6 @@ describe('PopulationDataDisplay', () => {
   });
 
   it('都道府県が選択されていない場合にメッセージが表示される', () => {
-    const mockPrefectures = [
-      { prefCode: 1, prefName: '北海道' },
-      { prefCode: 2, prefName: '青森県' },
-    ];
-
-    const mockPopulationData = {
-      1: [{ year: 2000, value: 5000000 }],
-      2: [{ year: 2000, value: 1500000 }],
-    };
-
     render(
       <PopulationDataDisplay
         selectedPrefectures={[]}
@@ -177,5 +139,68 @@ describe('PopulationDataDisplay', () => {
     );
 
     expect(screen.getByText('都道府県を選択してください')).toBeInTheDocument();
+  });
+
+  it('選択された都道府県に人口データが存在しない場合、グラフがレンダリングされない', () => {
+    const mockPrefectures = [
+      { prefCode: 1, prefName: '北海道' },
+      { prefCode: 2, prefName: '青森県' },
+    ];
+
+    const mockPopulationData = {
+      // 人口データが空
+      1: [],
+      2: [],
+    };
+
+    render(
+      <PopulationDataDisplay
+        selectedPrefectures={[1, 2]}
+        prefectures={mockPrefectures}
+        populationData={mockPopulationData}
+      />
+    );
+
+    expect(
+      screen.getByText('選択された都道府県の人口データがありません')
+    ).toBeInTheDocument();
+
+    const lines = screen.queryAllByTestId(/line-/);
+    expect(lines.length).toBe(0);
+  });
+
+  it('存在しない都道府県が選択された場合、Lineコンポーネントがレンダリングされない', () => {
+    const mockPrefectures = [
+      { prefCode: 1, prefName: '北海道' },
+      // prefCode 999 の都道府県データは存在しない
+    ];
+
+    const mockPopulationData = {
+      1: [
+        { year: 2000, value: 5000000 },
+        { year: 2005, value: 5500000 },
+      ],
+      999: [
+        { year: 2000, value: 1000000 },
+        { year: 2005, value: 1100000 },
+      ],
+    };
+
+    render(
+      <PopulationDataDisplay
+        selectedPrefectures={[1, 999]}
+        prefectures={mockPrefectures}
+        populationData={mockPopulationData}
+      />
+    );
+
+    const lines = screen.getAllByTestId(/line-/);
+    expect(lines.length).toBe(1);
+
+    expect(screen.queryByTestId('line-999')).not.toBeInTheDocument();
+
+    const legendItems = screen.getAllByTestId('legend-item');
+    expect(legendItems.length).toBe(1);
+    expect(legendItems[0]).toHaveTextContent('北海道');
   });
 });

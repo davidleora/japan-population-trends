@@ -3,10 +3,26 @@ import { Prefecture } from '../../types';
 import { vi } from 'vitest';
 import PrefectureCheckboxList from '../PrefectureCheckboxList';
 
-test('コンポーネントがレンダリングされることを確認', () => {
+test('prefecturesが空の場合、エラーメッセージが表示される', () => {
   render(
     <PrefectureCheckboxList
       prefectures={[]}
+      selectedPrefectures={[]}
+      onCheckboxChange={() => {}}
+    />
+  );
+
+  expect(
+    screen.getByText('都道府県データが利用できません')
+  ).toBeInTheDocument();
+});
+
+test('コンポーネントがレンダリングされることを確認', () => {
+  const mockPrefectures: Prefecture[] = [{ prefCode: 1, prefName: '北海道' }];
+
+  render(
+    <PrefectureCheckboxList
+      prefectures={mockPrefectures}
       selectedPrefectures={[]}
       onCheckboxChange={() => {}}
     />

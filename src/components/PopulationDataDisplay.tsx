@@ -22,6 +22,9 @@ type PopulationDataDisplayProps = {
   populationData: Record<number, PopulationData[]>;
 };
 
+/**
+ * チャートの高さをデバイスの種類に応じて決定する関数
+ */
 export const getChartHeight = (isMobile: boolean, isTablet: boolean) => {
   if (isTablet && !isMobile) {
     return 700;
@@ -32,6 +35,9 @@ export const getChartHeight = (isMobile: boolean, isTablet: boolean) => {
   }
 };
 
+/**
+ * 選択された都道府県の人口データをグラフで表示するコンポーネント
+ */
 const PopulationDataDisplay: React.FC<PopulationDataDisplayProps> = ({
   selectedPrefectures,
   prefectures,
@@ -42,6 +48,7 @@ const PopulationDataDisplay: React.FC<PopulationDataDisplayProps> = ({
 
   const chartHeight = getChartHeight(isMobile, isTablet);
 
+  // 都道府県が選択されていない場合の表示
   if (selectedPrefectures.length === 0) {
     return <p>都道府県を選択してください</p>;
   }
@@ -50,10 +57,14 @@ const PopulationDataDisplay: React.FC<PopulationDataDisplayProps> = ({
     (region) => region.prefectures
   );
 
+  // 選択された都道府県を地域順にソート
   const sortedSelectedPrefectures = selectedPrefectures.slice().sort((a, b) => {
     return prefectureOrder.indexOf(a) - prefectureOrder.indexOf(b);
   });
 
+  /**
+   * 人口データを年ごとにマージする関数
+   */
   const mergePopulationData = (
     sortedSelectedPrefectures: number[],
     populationData: Record<number, PopulationData[]>
@@ -72,6 +83,7 @@ const PopulationDataDisplay: React.FC<PopulationDataDisplayProps> = ({
           mergedData[popData.year][prefCode] = popData.value;
         });
       }
+      // データが存在しない場合は何もしない
     });
     return Object.values(mergedData).sort((a, b) => a.year - b.year);
   };
@@ -81,6 +93,10 @@ const PopulationDataDisplay: React.FC<PopulationDataDisplayProps> = ({
     populationData
   );
 
+  // マージ後のデータが存在しない場合の処理
+  if (mergedData.length === 0) {
+    return <p>選択された都道府県の人口データがありません</p>;
+  }
   return (
     <div>
       <h2>人口データ：</h2>
@@ -110,6 +126,12 @@ const PopulationDataDisplay: React.FC<PopulationDataDisplayProps> = ({
             const prefecture = prefectures.find(
               (pref) => pref.prefCode === prefCode
             );
+
+            // 都道府県データが存在しない場合はスキップ
+            if (!prefecture) {
+              return null;
+            }
+
             const color = `hsl(${index * 50}, 70%, 50%)`;
             return (
               <Line
@@ -130,6 +152,12 @@ const PopulationDataDisplay: React.FC<PopulationDataDisplayProps> = ({
           const prefecture = prefectures.find(
             (pref) => pref.prefCode === prefCode
           );
+
+          // 都道府県データが存在しない場合はスキップ
+          if (!prefecture) {
+            return null;
+          }
+
           const color = `hsl(${index * 50}, 70%, 50%)`;
           return (
             <div
