@@ -10,6 +10,7 @@ import {
 } from 'recharts';
 import { useMediaQuery } from 'react-responsive';
 import { regions } from '../constants/regions';
+import CustomTooltip from './CustomToolTip';
 
 type PopulationData = {
   year: number;
@@ -97,6 +98,7 @@ const PopulationDataDisplay: React.FC<PopulationDataDisplayProps> = ({
   if (mergedData.length === 0) {
     return <p>選択された都道府県の人口データがありません</p>;
   }
+
   return (
     <div>
       <h2>人口データ：</h2>
@@ -121,7 +123,7 @@ const PopulationDataDisplay: React.FC<PopulationDataDisplayProps> = ({
               fontSize: isMobile ? '9px' : isTablet ? '11px' : '13px',
             }}
           />
-          <Tooltip />
+          <Tooltip content={CustomTooltip} />
           {sortedSelectedPrefectures.map((prefCode, index) => {
             const prefecture = prefectures.find(
               (pref) => pref.prefCode === prefCode

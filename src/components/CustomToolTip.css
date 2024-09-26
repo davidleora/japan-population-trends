@@ -1,0 +1,52 @@
+.custom-tooltip {
+  background-color: rgba(50, 50, 50, 0.8);
+  color: #fff;
+  padding: 0.1px 10px 10px 10px;
+  border-radius: 5px;
+  max-width: 250px;
+  position: relative;
+}
+
+.custom-tooltip .label {
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.custom-tooltip .payload-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.custom-tooltip .payload-item {
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  margin-bottom: 3px;
+}
+
+.custom-tooltip .payload-color {
+  width: 10px;
+  height: 10px;
+  display: inline-block;
+  margin-right: 5px;
+}
+
+.custom-tooltip .pagination-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.custom-tooltip .pagination-button {
+  background: none;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.custom-tooltip .pagination-button:hover {
+  color: #aaa;
+}
