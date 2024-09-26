@@ -14,7 +14,10 @@ const PrefectureCheckboxList: React.FC<PrefectureCheckboxListProps> = ({
   onCheckboxChange,
 }) => {
   return (
-    <div className="prefecture-checkbox-list">
+    <div
+      className="prefecture-checkbox-list"
+      data-testid="prefecture-checkbox-list"
+    >
       {regions.map((region) => {
         const regionPrefectures = prefectures.filter((prefecture) =>
           region.prefectures.includes(prefecture.prefCode)
